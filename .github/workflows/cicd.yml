@@ -1,0 +1,27 @@
+name: test workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sast-bandit:
+    name: SAST - Bandit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v7
+
+      - name: Installation de Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      - name: Installation de Bandit
+        run: pip install bandit
+
+      - name: Scan Bandit (échoue si sévérité Medium ou High)
+        run: bandit -r . -ll -x './.venv,./__pycache__,./.github'
